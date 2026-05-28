@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마포 셔츠룸 블로그 - 프록시 보안 꿀팁</title>
+    <meta name="description" content="마포 셔츠룸 방문자들을 위한 프록시 보안 실전 가이드. 개인정보 보호와 익명 접속 노하우를 내 경험과 함께 풀어냅니다.">
+    <meta name="keywords" content="마포 셔츠룸, 프록시 보안, 마포 프록시, 셔츠룸 보안, IP 우회, 익명 접속, 블로그">
+    <link rel="canonical" href="https://sf-t3-1779642675702-196.pages.dev/blog/">
+    <meta name="bpaas-design-system" content="brutalist-avantgarde">
+    <meta name="bpaas-design-theme" content="kr-neon-void">
+    <meta property="og:title" content="마포 셔츠룸 프록시 보안 - 실전 블로그">
+    <meta property="og:description" content="마포 셔츠룸 방문자들을 위한 프록시 보안 실전 가이드. 개인정보 보호와 익명 접속 노하우를 내 경험과 함께 풀어냅니다.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://sf-t3-1779642675702-196.pages.dev/blog/">
+    <style>
+        /* CSS 리셋 */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { font-size: 16px; scroll-behavior: smooth; }
+        body { font-family: 'Pretendard', 'Noto Sans KR', system-ui, sans-serif; background: #0a0a0a; color: #e0e0e0; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+        /* 타이포그래피 */
+        h1, h2, h3, h4, h5, h6 { font-weight: 800; letter-spacing: -0.02em; color: #f0f0f0; }
+        h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+        h2 { font-size: 1.75rem; margin-top: 2rem; margin-bottom: 0.75rem; border-left: 4px solid #ff4d4d; padding-left: 1rem; }
+        h3 { font-size: 1.25rem; margin-top: 1.5rem; margin-bottom: 0.5rem; color: #ffb347; }
+        p { margin-bottom: 1rem; color: #cccccc; }
+        a { color: #ffcc00; text-decoration: underline wavy rgba(255,204,0,0.3); transition: all 0.2s; }
+        a:hover { color: #ff6666; text-decoration-color: #ff6666; }
+        /* 레이아웃 */
+        .container { max-width: 960px; margin: 0 auto; padding: 0 1.5rem; }
+        @media (max-width: 768px) { .container { padding: 0 1rem; } }
+        section { padding: 3rem 0; }
+        /* 헤더 & 네비게이션 */
+        header { background: #111; border-bottom: 3px solid #ff4d4d; position: sticky; top: 0; z-index: 100; }
+        .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1200px; margin: 0 auto; }
+        .logo { font-size: 1.5rem; font-weight: 900; color: #ff4d4d; text-decoration: none; letter-spacing: -0.05em; }
+        .logo span { color: #f0f0f0; }
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 0.5rem; }
+        .hamburger span { display: block; width: 28px; height: 3px; background: #fff; border-radius: 2px; transition: 0.3s; }
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+        nav { display: flex; align-items: center; gap: 2rem; }
+        nav a { font-weight: 600; font-size: 0.95rem; color: #ccc; text-decoration: none; transition: 0.2s; }
+        nav a:hover { color: #ffb347; }
+        nav a.active { color: #ff4d4d; border-bottom: 2px solid #ff4d4d; }
+        .tel-link { background: #ff4d4d; color: #0a0a0a !important; padding: 0.4rem 1rem; border-radius: 4px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; transition: 0.2s; }
+        .tel-link:hover { background: #ff6666; color: #fff !important; }
+        @media (max-width: 768px) {
+            .hamburger { display: flex; }
+            nav { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; width: 100%; background: #111; padding: 1.5rem; gap: 1rem; border-bottom: 3px solid #ff4d4d; }
+            nav.open { display: flex; }
+            nav a { font-size: 1.1rem; }
+            .tel-link { align-self: flex-start; margin-top: 0.5rem; }
+        }
+        /* 포스트 스타일 */
+        .blog-post { background: #1a1a1a; padding: 2rem; border-radius: 8px; border-left: 6px solid #ffb347; margin-top: 1rem; }
+        .blog-post time { display: block; font-size: 0.85rem; color: #888; margin-bottom: 1rem; }
+        .blog-post .highlight { background: rgba(255, 179, 71, 0.15); padding: 1rem; border-radius: 6px; border: 1px solid #ffb347; margin: 1.5rem 0; }
+        .blog-post ul { margin: 1rem 0 1rem 1.5rem; color: #ccc; }
+        .blog-post ul li { margin-bottom: 0.5rem; }
+        .blog-post .personal-note { font-style: italic; color: #ffb347; background: rgba(255, 179, 71, 0.08); padding: 1rem; border-radius: 6px; margin-top: 1.5rem; }
+        /* 푸터 */
+        footer { background: #111; border-top: 3px solid #ff4d4d; padding: 2rem 0; text-align: center; font-size: 0.85rem; color: #666; }
+        footer a { color: #ffcc00; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-inner">
+        <a href="/" class="logo">🔒 <span>마포셔츠룸</span>프록시</a>
+        <button class="hamburger" id="hamburger" aria-label="메뉴 열기">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <nav id="nav">
+            <a href="/">홈</a>
+            <a href="/service/">서비스</a>
+            <a href="/blog/" class="active">블로그</a>
+            <a href="/contact/">문의</a>
+            <a href="tel:010-6279-0862" class="tel-link">📞 010-6279-0862</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    <section>
+        <h1>마포 셔츠룸, 프록시 보안 꼭 필요한 이유</h1>
+        <article class="blog-post">
+            <time datetime="2025-04-08">2025년 4월 8일 · by 프록시 지킴이</time>
+
+            <p>안녕하세요? 저는 마포 셔츠룸을 자주 찾는 평범한 직장인이에요. 처음에는 그냥 아무 생각 없이 딱 내 폰 그대로 들고 갔어요. 근데 어느 날 친한 형이 “너 핸드폰 위치 실시간으로 찍히는 거 알고 가냐?”고 하더라고요. 그때부터 관심을 갖게 됐어요.</p>
+
+            <p>마포 셔츠룸 특성상 예약 시스템이나 간단한 본인 확인 절차가 있는 곳들이 많잖아요? 그런 과정에서 내 개인 IP가 그대로 노출되면 생각보다 위험할 수 있어요. 특히 요새는 와이파이도 함부로 쓰면 안 되고요. 제가 한 번은 공용 와이파이로 접속했다가 다음날부터 스팸 문자가 폭탄처럼 왔던 경험이 있어요. 그 후로는 무조건 프록시 보안을 켜고 다녀요.</p>
+
+            <h2>프록시 하나면 해결되는 것들</h2>
+            <ul>
+                <li>내 실제 IP 주소 완전히 숨기기 (마포 셔츠룸 단속 걱정 제로)</li>
+                <li>와이파이 해킹 방지 (데이터 암호화가 자동으로 됨)</li>
+                <li>위치 기반 추적 차단 (가짜 위치로 설정 가능)</li>
+                <li>방문 기록도 서버에 남지 않음 (프록시 로그 삭제 기능)</li>
+            </ul>
+
+            <div class="highlight">
+                <strong>💡</strong> 제 경험상 <strong>마포 셔츠룸</strong> 방문 전에 프록시 앱 하나 켜는 것보다 더 편한 게 없더라고요. 딱 5초면 설정 끝이고, 그날 하루 종일 안심이에요.
+            </div>
+
+            <p>사실 처음에는 “뭐 귀찮게 그런 걸 왜 해” 싶었어요. 그런데 한 번 적용해 보니까 완전 습관이 됐어요. 집 나가기 전에 지갑 챙기듯이, 이제는 프록시 켜는 게 기본 루틴이 됐네요. 주변에 마포에서 셔츠룸 간다는 친구들한테도 꼭 추천해 주고 있어요.</p>
+
+            <blockquote class="personal-note">
+                📌 내가 쓰는 방법: 폰에 프록시 앱 하나 깔고, 마포 셔츠룸 근처에 도착하면 ‘익명 모드’로 전환. 끝. 진짜 간단해요. 심지어 데이터도 절약되고 광고도 안 뜨더라고요. (신기)
+            </blockquote>
+
+            <p>요즘 마포 셔츠룸 관련 커뮤니티 보면 “프록시 필수”라는 말이 꽤 보이더라고요. 저도 그분들 의견에 완전 공감합니다. 개인정보는 한 번 털리면 돌이키기 힘들잖아요? 미리 대비하는 게 최선이에요. 우리 모두 안전하게 즐겨요!</p>
+
+            <p>혹시 더 궁금한 점 있으면 아래 번호로 언제든 연락 주세요. (010-6279-0862) 저도 처음엔 이런저런 질문 많이 했는데, 실제로 써 보니까 별거 아니더라고요. 부담 없이 물어봐 주세요!</p>
+        </article>
+    </section>
+</main>
+
+<footer>
+    <div class="container">
+        <p>© 2025 마포 셔츠룸 프록시 보안 · <a href="tel:010-6279-0862">010-6279-0862</a> · 개인정보 보호는 기본</p>
+        <p style="margin-top:0.5rem; font-size:0.75rem;">본 페이지는 정보 제공 목적이며 실제 업소와 무관합니다.</p>
+    </div>
+</footer>
+
+<script>
+    // 햄버거 메뉴 토글
+    document.getElementById('hamburger').addEventListener('click', function() {
+        this.classList.toggle('active');
+        document.getElementById('nav').classList.toggle('open');
+    });
+    // 메뉴 링크 클릭 시 자동 닫힘 (모바일)
+    document.querySelectorAll('#nav a').forEach(link => {
+        link.addEventListener('click', function() {
+            document.getElementById('hamburger').classList.remove('active');
+            document.getElementById('nav').classList.remove('open');
+        });
+    });
+</script>
+
+</body>
+</html>
